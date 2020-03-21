@@ -1,3 +1,4 @@
+import 'package:store_server/models/products_model.dart';
 import 'package:store_server/store_server.dart';
 
 class ProductsController extends ResourceController {
@@ -17,7 +18,9 @@ class ProductsController extends ResourceController {
 
   @Operation.get()
   Future<Response> getAllProducts() async {
-    return Response.ok(_products);
+    final query = Query<Products>(context);
+    final products = await query.fetch();
+    return Response.ok(products);
   }
 
   @Operation.get('id')

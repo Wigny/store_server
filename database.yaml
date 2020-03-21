@@ -1,5 +1,5 @@
-username: 'projectuser'
-password: 'password'
-host: 'localhost'
+username: 'puaoapzybnkhvt'
+password: 'ee92da3f60b76d0ebdf7278c028ce55e13f22a73531d410a78d993b6b8437332'
+host: 'ec2-54-152-175-141.compute-1.amazonaws.com'
 port: 5432
-databaseName: 'mydatabase'
+databaseName: 'd976jk2g8fs84a'
