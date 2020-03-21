@@ -6,16 +6,6 @@ class ProductsController extends ResourceController {
 
   final ManagedContext context;
 
-  final _products = [
-    {
-      'id': 1,
-      'descricao': 'Violão',
-      'valor': '800',
-      'estoque': 50,
-      'tipo': 'novo'
-    }
-  ];
-
   @Operation.get()
   Future<Response> getAllProducts() async {
     final query = Query<Products>(context);
@@ -52,7 +42,6 @@ class ProductsController extends ResourceController {
     final query = Query<Products>(context)
       ..where((i) => i.id).equalTo(id)
       ..values = body;
-
     final product = await query.updateOne();
 
     return (product != null) ? Response.ok(product) : Response.notFound();
@@ -62,12 +51,13 @@ class ProductsController extends ResourceController {
   Future<Response> deleteProductByID(
     @Bind.path('id') int id,
   ) async {
-    _products.removeAt(
-      _products.indexWhere(
-        (i) => i['id'] == id,
-      ),
-    );
+    final query = Query<Products>(context)..where((i) => i.id).equalTo(id);
+    final rows = await query.delete();
 
-    return Response.ok(_products);
+    return Response.ok({
+      'state': true,
+      'msg': 'Delete successfull',
+      'rows_deleted': rows,
+    });
   }
 }
