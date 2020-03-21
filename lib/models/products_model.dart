@@ -3,18 +3,30 @@ import 'package:store_server/store_server.dart';
 class Products extends ManagedObject<Produtos> implements Produtos {}
 
 class Produtos {
-  @primaryKey
+  @Column(
+    primaryKey: true,
+    nullable: false,
+  )
   int id;
 
-  @Column(nullable: false, unique: true)
+  @Column(
+    nullable: false,
+    unique: true,
+  )
   String descricao;
 
-  @Column(nullable: false, databaseType: ManagedPropertyType.doublePrecision)
+  @Column(
+    databaseType: ManagedPropertyType.doublePrecision,
+    nullable: false,
+  )
   double valor;
 
   @Column(nullable: false)
   int estoque;
 
-  @Column(defaultValue: 'novo')
+  @Column(
+    defaultValue: 'novo',
+    nullable: false,
+  )
   String tipo;
 }

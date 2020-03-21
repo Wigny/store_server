@@ -36,9 +36,11 @@ class ProductsController extends ResourceController {
   Future<Response> postProduct(
     @Bind.body() Map<String, dynamic> product,
   ) async {
-    _products.add(product);
+    final model = Products()..read(product, ignore: ["id"]);
+    final query = Query<Products>(context)..values = model;
+    final inserted = await query.insert();
 
-    return Response.ok(_products);
+    return Response.ok(inserted);
   }
 
   @Operation.put()
