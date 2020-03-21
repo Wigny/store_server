@@ -20,15 +20,14 @@ class ProductsController extends ResourceController {
   Future<Response> getAllProducts() async {
     final query = Query<Products>(context);
     final products = await query.fetch();
+
     return Response.ok(products);
   }
 
   @Operation.get('id')
   Future<Response> getProductByID(@Bind.path('id') int id) async {
-    final product = _products.firstWhere(
-      (i) => i['id'] == id,
-      orElse: () => null,
-    );
+    final query = Query<Products>(context)..where((i) => i.id).equalTo(id);
+    final product = await query.fetchOne();
 
     return (product != null) ? Response.ok(product) : Response.notFound();
   }

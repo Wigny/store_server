@@ -6,7 +6,7 @@ class Produtos {
   @primaryKey
   int id;
 
-  @Column(nullable: false)
+  @Column(nullable: false, unique: true)
   String descricao;
 
   @Column(nullable: false, databaseType: ManagedPropertyType.doublePrecision)
