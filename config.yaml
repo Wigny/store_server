@@ -1,3 +1,4 @@
+# prod
 database:
   host: 'ec2-54-152-175-141.compute-1.amazonaws.com'
   port: 5432

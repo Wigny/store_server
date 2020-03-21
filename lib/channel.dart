@@ -11,14 +11,16 @@ class StoreServerChannel extends ApplicationChannel {
       (rec) => print("$rec ${rec.error ?? ""} ${rec.stackTrace ?? ""}"),
     );
 
+    final config = StoreConfig(options.configurationFilePath);
+
     context = ManagedContext(
       ManagedDataModel.fromCurrentMirrorSystem(),
       PostgreSQLPersistentStore.fromConnectionInfo(
-        "puaoapzybnkhvt",
-        "ee92da3f60b76d0ebdf7278c028ce55e13f22a73531d410a78d993b6b8437332",
-        "ec2-54-152-175-141.compute-1.amazonaws.com",
-        5432,
-        "d976jk2g8fs84a",
+        config.database.username,
+        config.database.password,
+        config.database.host,
+        config.database.port,
+        config.database.databaseName,
         useSSL: true,
       ),
     );
@@ -40,4 +42,10 @@ class StoreServerChannel extends ApplicationChannel {
 
     return router;
   }
+}
+
+class StoreConfig extends Configuration {
+  StoreConfig(String path) : super.fromFile(File(path));
+
+  DatabaseConfiguration database;
 }

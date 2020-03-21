@@ -52,12 +52,10 @@ class ProductsController extends ResourceController {
     @Bind.path('id') int id,
   ) async {
     final query = Query<Products>(context)..where((i) => i.id).equalTo(id);
-    final rows = await query.delete();
+    final deleted = await query.delete();
 
-    return Response.ok({
-      'state': true,
-      'msg': 'Delete successfull',
-      'rows_deleted': rows,
-    });
+    return (deleted > 0)
+        ? Response.ok({'msg': 'Delete successfull'})
+        : Response.notFound();
   }
 }
