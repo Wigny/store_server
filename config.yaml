@@ -5,3 +5,5 @@ database:
   username: 'puaoapzybnkhvt'
   password: 'ee92da3f60b76d0ebdf7278c028ce55e13f22a73531d410a78d993b6b8437332'
   databaseName: 'd976jk2g8fs84a'
+
+useSSL: true

@@ -21,7 +21,7 @@ class StoreServerChannel extends ApplicationChannel {
         config.database.host,
         config.database.port,
         config.database.databaseName,
-        useSSL: true,
+        useSSL: config.useSSL,
       ),
     );
   }
@@ -48,4 +48,5 @@ class StoreConfig extends Configuration {
   StoreConfig(String path) : super.fromFile(File(path));
 
   DatabaseConfiguration database;
+  bool useSSL;
 }

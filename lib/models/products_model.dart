@@ -6,7 +6,7 @@ class Produtos {
   @Column(
     primaryKey: true,
     databaseType: ManagedPropertyType.bigInteger,
-    nullable: false,
+    autoincrement: true,
   )
   int id;
 
@@ -25,9 +25,6 @@ class Produtos {
   @Column(nullable: false)
   int estoque;
 
-  @Column(
-    defaultValue: 'novo',
-    nullable: false,
-  )
+  @Column(nullable: false)
   String tipo;
 }

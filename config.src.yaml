@@ -5,3 +5,5 @@ database:
   username: dart
   password: dart
   databaseName: dart_test
+
+useSSL: false 
