@@ -5,6 +5,7 @@ class Products extends ManagedObject<Produtos> implements Produtos {}
 class Produtos {
   @Column(
     primaryKey: true,
+    databaseType: ManagedPropertyType.bigInteger,
     nullable: false,
   )
   int id;

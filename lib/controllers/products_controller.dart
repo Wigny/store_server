@@ -25,7 +25,9 @@ class ProductsController extends ResourceController {
   }
 
   @Operation.get('id')
-  Future<Response> getProductByID(@Bind.path('id') int id) async {
+  Future<Response> getProductByID(
+    @Bind.path('id') int id,
+  ) async {
     final query = Query<Products>(context)..where((i) => i.id).equalTo(id);
     final product = await query.fetchOne();
 
@@ -34,29 +36,32 @@ class ProductsController extends ResourceController {
 
   @Operation.post()
   Future<Response> postProduct(
-    @Bind.body() Map<String, dynamic> product,
+    @Bind.body(ignore: ["id"]) Products body,
   ) async {
-    final model = Products()..read(product, ignore: ["id"]);
-    final query = Query<Products>(context)..values = model;
-    final inserted = await query.insert();
+    final query = Query<Products>(context)..values = body;
+    final product = await query.insert();
 
-    return Response.ok(inserted);
+    return Response.ok(product);
   }
 
-  @Operation.put()
-  Future<Response> putProduct(@Bind.body() Map<String, dynamic> product) async {
-    _products.removeAt(
-      _products.indexWhere(
-        (i) => i['id'] == product['id'],
-      ),
-    );
-    _products.add(product);
+  @Operation.put('id')
+  Future<Response> putProduct(
+    @Bind.path('id') int id,
+    @Bind.body(ignore: ["id"]) Products body,
+  ) async {
+    final query = Query<Products>(context)
+      ..where((i) => i.id).equalTo(id)
+      ..values = body;
 
-    return Response.ok(_products);
+    final product = await query.updateOne();
+
+    return (product != null) ? Response.ok(product) : Response.notFound();
   }
 
   @Operation.delete('id')
-  Future<Response> deleteProductByID(@Bind.path('id') int id) async {
+  Future<Response> deleteProductByID(
+    @Bind.path('id') int id,
+  ) async {
     _products.removeAt(
       _products.indexWhere(
         (i) => i['id'] == id,
