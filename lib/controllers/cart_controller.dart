@@ -1,11 +1,16 @@
 import 'package:store_server/models/products_model.dart';
 import 'package:store_server/models/sales_model.dart';
+import 'package:store_server/repositories/cart_repository.dart';
+
 import 'package:store_server/store_server.dart';
 
 class CartController extends ResourceController {
-  CartController(this.context);
+  CartController(this.context) {
+    repository = CartRepository();
+  }
 
   final ManagedContext context;
+  CartRepository repository;
 
   Response _response<T>(T res) =>
       (res != null) ? Response.ok(res) : Response.notFound();
@@ -40,18 +45,21 @@ class CartController extends ResourceController {
     if (estoque >= quantidade) {
       final Sales sale = await context.transaction<Sales>(
         (ManagedContext transaction) async {
-          final Query<Products> updateProducts = Query<Products>(transaction)
-            ..where((Products p) => p.id).equalTo(produto)
-            ..values.estoque = estoque - quantidade;
-          await updateProducts.updateOne();
+          await repository.updateProduct(
+            context: transaction,
+            id: produto,
+            body: Products()..id = produto,
+          );
 
-          final Query<Sales> putSales = Query<Sales>(transaction)
-            ..values.usuario.id = user
-            ..values.produto.id = produto
-            ..values.finalizada = false
-            ..values.quantidade = quantidade
-            ..values.data = DateTime.now();
-          return await putSales.insert();
+          return await repository.putSale(
+            context: transaction,
+            body: Sales()
+              ..usuario.id = user
+              ..produto.id = produto
+              ..finalizada = false
+              ..quantidade = quantidade
+              ..data = DateTime.now(),
+          );
         },
       );
 
