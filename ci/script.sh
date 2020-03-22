@@ -10,8 +10,3 @@ psql -c 'grant all on database dart_test to dart;' -U postgres
 pub get
 
 pub run test -j 1 -r expanded $RUNNER_ARGS
-
-#if [[ "$TRAVIS_BUILD_STAGE_NAME" == "coverage" && "$TRAVIS_BRANCH" == "master" && "$TRAVIS_PULL_REQUEST" == false ]]; then
-#  pub global activate -sgit https://github.com/stablekernel/aqueduct-coverage-tool.git
-#  pub global run aqueduct_coverage_tool:main
-#fi

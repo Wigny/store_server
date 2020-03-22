@@ -1,4 +1,5 @@
 import 'package:store_server/controllers/products_controller.dart';
+import 'package:store_server/controllers/users_controller.dart';
 
 import 'store_server.dart';
 
@@ -38,6 +39,10 @@ class StoreServerChannel extends ApplicationChannel {
 
     router.route('/products/[:id]').link(
           () => ProductsController(context),
+        );
+
+    router.route('/users/[:id]').link(
+          () => UsersController(context),
         );
 
     return router;

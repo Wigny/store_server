@@ -7,7 +7,7 @@ import '../harness/app.dart';
 
 void main() {
   final harness = Harness()..install();
-  final products = {
+  final product = {
     "descricao": 'Violão',
     "valor": 800.00,
     "estoque": 15,
@@ -16,10 +16,10 @@ void main() {
 
   test("GET /products returns 200 OK", () async {
     final query = Query<Products>(harness.application.channel.context)
-      ..values.descricao = products['descricao'] as String
-      ..values.valor = products['valor'] as double
-      ..values.estoque = products['estoque'] as int
-      ..values.tipo = products['tipo'] as String;
+      ..values.descricao = product['descricao'] as String
+      ..values.valor = product['valor'] as double
+      ..values.estoque = product['estoque'] as int
+      ..values.tipo = product['tipo'] as String;
 
     await query.insert();
 
@@ -41,26 +41,26 @@ void main() {
   test("POST /products returns 200 OK", () async {
     final response = await harness.agent.post(
       "/products",
-      body: products,
+      body: product,
     );
     expectResponse(response, 200, body: {
       "id": greaterThan(0),
-      "descricao": products['descricao'],
-      "valor": products['valor'],
-      "estoque": products['estoque'],
-      "tipo": products['tipo'],
+      "descricao": product['descricao'],
+      "valor": product['valor'],
+      "estoque": product['estoque'],
+      "tipo": product['tipo'],
     });
   });
 
   test("POST /products returns 409 OK", () async {
     await harness.agent.post(
       "/products",
-      body: products,
+      body: product,
     );
 
     final badResponse = await harness.agent.post(
       "/products",
-      body: products,
+      body: product,
     );
     expectResponse(badResponse, 409);
   });
