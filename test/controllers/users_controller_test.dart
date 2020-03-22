@@ -6,22 +6,23 @@ import 'package:test/test.dart';
 import '../harness/app.dart';
 
 void main() {
-  final harness = Harness()..install();
-  final user = {
-    "id": 1,
-    "nome": 'Wígny',
-    "email": 'wignybora@gmail.com',
+  final Harness harness = Harness()..install();
+  final Map<String, dynamic> user = {
+    'id': 1,
+    'nome': 'Wígny',
+    'email': 'wignybora@gmail.com',
   };
 
-  test("GET /users/:id returns 200 OK", () async {
-    final query = Query<Users>(harness.application.channel.context)
+  test('GET /users/:id returns 200 OK', () async {
+    final Query<Users> query = Query<Users>(harness.application.channel.context)
       ..values.id = user['id'] as int
       ..values.nome = user['nome'] as String
       ..values.email = user['email'] as String;
 
     await query.insert();
 
-    final response = await harness.agent.get("/users/${user["id"]}");
+    final TestResponse response =
+        await harness.agent.get('/users/${user['id']}');
 
     expectResponse(
       response,
@@ -30,52 +31,52 @@ void main() {
     );
   });
 
-  test("POST /users returns 200 OK", () async {
-    final response = await harness.agent.post(
-      "/users",
+  test('POST /users returns 200 OK', () async {
+    final TestResponse response = await harness.agent.post(
+      '/users',
       body: user,
     );
     expectResponse(response, 200, body: {
-      "id": greaterThan(0),
-      "nome": user['nome'],
-      "email": user['email'],
+      'id': greaterThan(0),
+      'nome': user['nome'],
+      'email': user['email'],
     });
   });
 
-  test("POST /users returns 409 OK", () async {
+  test('POST /users returns 409 OK', () async {
     await harness.agent.post(
-      "/users",
+      '/users',
       body: user,
     );
 
-    final badResponse = await harness.agent.post(
-      "/users",
+    final TestResponse badResponse = await harness.agent.post(
+      '/users',
       body: user,
     );
     expectResponse(badResponse, 409);
   });
 
-  test("PUT /users/:id returns 200 OK", () async {
+  test('PUT /users/:id returns 200 OK', () async {
     await harness.agent.post(
-      "/users",
+      '/users',
       body: user,
     );
 
-    final response = await harness.agent.put(
-      "/users/${user["id"]}",
+    final TestResponse response = await harness.agent.put(
+      '/users/${user['id']}',
       body: user,
     );
     expectResponse(response, 200);
   });
 
-  test("DELETE /users/:id returns 200 OK", () async {
+  test('DELETE /users/:id returns 200 OK', () async {
     await harness.agent.post(
-      "/users",
+      '/users',
       body: user,
     );
 
-    final response = await harness.agent.delete(
-      "/users/${user["id"]}",
+    final TestResponse response = await harness.agent.delete(
+      '/users/${user['id']}',
       body: user,
     );
     expectResponse(response, 200);

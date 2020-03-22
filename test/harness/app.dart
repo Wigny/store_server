@@ -7,7 +7,7 @@ class Harness extends TestHarness<StoreServerChannel> with TestHarnessORMMixin {
   ManagedContext get context => channel.context;
 
   @override
-  Future onSetUp() async {
+  Future<void> onSetUp() async {
     await resetData();
   }
 }

@@ -3,14 +3,16 @@ import 'package:test/test.dart';
 
 import 'harness/app.dart';
 
-void main() async {
-  final harness = Harness()..install();
+Future<void> main() async {
+  final Harness harness = Harness()..install();
 
-  test("GET / returns server running", () async {
+  test('GET / returns server running', () async {
     expectResponse(
-      await harness.agent.get("/"),
+      await harness.agent.get('/'),
       200,
-      body: {"running": "true"},
+      body: {
+        'running': 'true',
+      },
     );
   });
 }
