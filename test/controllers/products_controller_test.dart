@@ -8,6 +8,7 @@ import '../harness/app.dart';
 void main() {
   final harness = Harness()..install();
   final product = {
+    "id": 1,
     "descricao": 'Violão',
     "valor": 800.00,
     "estoque": 15,
@@ -43,13 +44,11 @@ void main() {
       "/products",
       body: product,
     );
-    expectResponse(response, 200, body: {
-      "id": greaterThan(0),
-      "descricao": product['descricao'],
-      "valor": product['valor'],
-      "estoque": product['estoque'],
-      "tipo": product['tipo'],
-    });
+    expectResponse(
+      response,
+      200,
+      body: product,
+    );
   });
 
   test("POST /products returns 409 OK", () async {
@@ -63,5 +62,31 @@ void main() {
       body: product,
     );
     expectResponse(badResponse, 409);
+  });
+
+  test("PUT /products/:id returns 200 OK", () async {
+    await harness.agent.post(
+      "/products",
+      body: product,
+    );
+
+    final response = await harness.agent.put(
+      "/products/${product["id"]}",
+      body: product,
+    );
+    expectResponse(response, 200);
+  });
+
+  test("DELETE /products/:id returns 200 OK", () async {
+    await harness.agent.post(
+      "/products",
+      body: product,
+    );
+
+    final response = await harness.agent.delete(
+      "/products/${product["id"]}",
+      body: product,
+    );
+    expectResponse(response, 200);
   });
 }
