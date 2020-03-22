@@ -6,56 +6,64 @@ class ProductsController extends ResourceController {
 
   final ManagedContext context;
 
+  Response _response<T>(T res) =>
+      (res != null) ? Response.ok(res) : Response.notFound();
+
   @Operation.get()
   Future<Response> getAllProducts() async {
-    final query = Query<Products>(context);
-    final products = await query.fetch();
+    final Query<Products> query = Query<Products>(context);
 
-    return Response.ok(products);
+    return Response.ok(
+      await query.fetch(),
+    );
   }
 
   @Operation.get('id')
   Future<Response> getProductByID(
     @Bind.path('id') int id,
   ) async {
-    final query = Query<Products>(context)..where((i) => i.id).equalTo(id);
-    final product = await query.fetchOne();
+    final Query<Products> query = Query<Products>(context)
+      ..where((Products i) => i.id).equalTo(id);
 
-    return (product != null) ? Response.ok(product) : Response.notFound();
+    return _response<Products>(
+      await query.fetchOne(),
+    );
   }
 
   @Operation.post()
   Future<Response> postProduct(
-    @Bind.body(ignore: ["id"]) Products body,
+    @Bind.body(ignore: <String>['id']) Products body,
   ) async {
-    final query = Query<Products>(context)..values = body;
-    final product = await query.insert();
+    final Query<Products> query = Query<Products>(context)..values = body;
 
-    return Response.ok(product);
+    return Response.ok(
+      await query.insert(),
+    );
   }
 
   @Operation.put('id')
   Future<Response> putProduct(
     @Bind.path('id') int id,
-    @Bind.body(ignore: ["id"]) Products body,
+    @Bind.body(ignore: <String>['id']) Products body,
   ) async {
-    final query = Query<Products>(context)
-      ..where((i) => i.id).equalTo(id)
+    final Query<Products> query = Query<Products>(context)
+      ..where((Products i) => i.id).equalTo(id)
       ..values = body;
-    final product = await query.updateOne();
 
-    return (product != null) ? Response.ok(product) : Response.notFound();
+    return _response<Products>(
+      await query.updateOne(),
+    );
   }
 
   @Operation.delete('id')
   Future<Response> deleteProductByID(
     @Bind.path('id') int id,
   ) async {
-    final query = Query<Products>(context)..where((i) => i.id).equalTo(id);
-    final deleted = await query.delete();
+    final Query<Products> query = Query<Products>(context)
+      ..where((Products i) => i.id).equalTo(id);
 
-    return (deleted > 0)
-        ? Response.ok({'msg': 'Delete successfull'})
-        : Response.notFound();
+    final int deleted = await query.delete();
+
+    return (deleted > 0) ? Response.ok(deleted) : Response.notFound();
   }
 }

@@ -1,3 +1,4 @@
+import 'package:store_server/models/sales_model.dart';
 import 'package:store_server/store_server.dart';
 
 class Users extends ManagedObject<Usuarios> implements Usuarios {}
@@ -20,4 +21,6 @@ class Usuarios {
     nullable: false,
   )
   String email;
+
+  ManagedSet<Sales> vendas;
 }

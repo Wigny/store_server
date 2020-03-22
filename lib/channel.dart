@@ -1,18 +1,19 @@
+import 'package:store_server/controllers/cart_controller.dart';
 import 'package:store_server/controllers/products_controller.dart';
 import 'package:store_server/controllers/users_controller.dart';
-
-import 'store_server.dart';
+import 'package:store_server/store_server.dart';
 
 class StoreServerChannel extends ApplicationChannel {
   ManagedContext context;
 
   @override
-  Future prepare() async {
+  Future<void> prepare() async {
     logger.onRecord.listen(
-      (rec) => print("$rec ${rec.error ?? ""} ${rec.stackTrace ?? ""}"),
+      (LogRecord rec) =>
+          print("$rec ${rec.error ?? ""} ${rec.stackTrace ?? ""}"),
     );
 
-    final config = StoreConfig(options.configurationFilePath);
+    final StoreConfig config = StoreConfig(options.configurationFilePath);
 
     context = ManagedContext(
       ManagedDataModel.fromCurrentMirrorSystem(),
@@ -29,11 +30,13 @@ class StoreServerChannel extends ApplicationChannel {
 
   @override
   Controller get entryPoint {
-    final router = Router();
+    final Router router = Router();
 
-    router.route("/").linkFunction(
-      (request) async {
-        return Response.ok({"running": "true"});
+    router.route('/').linkFunction(
+      (Request request) async {
+        return Response.ok({
+          'running': true,
+        });
       },
     );
 
@@ -43,6 +46,10 @@ class StoreServerChannel extends ApplicationChannel {
 
     router.route('/users/[:id]').link(
           () => UsersController(context),
+        );
+
+    router.route('/users/:user/cart').link(
+          () => CartController(context),
         );
 
     return router;

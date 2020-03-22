@@ -6,48 +6,54 @@ class UsersController extends ResourceController {
 
   final ManagedContext context;
 
+  Response _response<T>(T res) =>
+      (res != null) ? Response.ok(res) : Response.notFound();
+
   @Operation.get('id')
   Future<Response> getUserByID(
     @Bind.path('id') int id,
   ) async {
-    final query = Query<Users>(context)..where((i) => i.id).equalTo(id);
-    final user = await query.fetchOne();
+    final Query<Users> query = Query<Users>(context)
+      ..where((Users i) => i.id).equalTo(id);
 
-    return (user != null) ? Response.ok(user) : Response.notFound();
+    return _response<Users>(
+      await query.fetchOne(),
+    );
   }
 
   @Operation.post()
   Future<Response> postUser(
-    @Bind.body(ignore: ["id"]) Users body,
+    @Bind.body(ignore: <String>['id']) Users body,
   ) async {
-    final query = Query<Users>(context)..values = body;
-    final user = await query.insert();
+    final Query<Users> query = Query<Users>(context)..values = body;
 
-    return Response.ok(user);
+    return Response.ok(
+      await query.insert(),
+    );
   }
 
   @Operation.put('id')
   Future<Response> putUser(
     @Bind.path('id') int id,
-    @Bind.body(ignore: ["id"]) Users body,
+    @Bind.body(ignore: <String>['id']) Users body,
   ) async {
-    final query = Query<Users>(context)
-      ..where((i) => i.id).equalTo(id)
+    final Query<Users> query = Query<Users>(context)
+      ..where((Users i) => i.id).equalTo(id)
       ..values = body;
-    final user = await query.updateOne();
 
-    return (user != null) ? Response.ok(user) : Response.notFound();
+    return _response<Users>(
+      await query.updateOne(),
+    );
   }
 
   @Operation.delete('id')
   Future<Response> deleteUserByID(
     @Bind.path('id') int id,
   ) async {
-    final query = Query<Users>(context)..where((i) => i.id).equalTo(id);
-    final deleted = await query.delete();
+    final Query<Users> query = Query<Users>(context)
+      ..where((Users i) => i.id).equalTo(id);
+    final int deleted = await query.delete();
 
-    return (deleted > 0)
-        ? Response.ok({'msg': 'Delete successfull'})
-        : Response.notFound();
+    return (deleted > 0) ? Response.ok(deleted) : Response.notFound();
   }
 }
