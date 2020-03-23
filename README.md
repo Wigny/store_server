@@ -1,4 +1,4 @@
-# store_server
+# store_server [![Build Status](https://travis-ci.com/Wigny/store_server.svg?branch=master)](https://travis-ci.com/Wigny/store_server)
 
 ## Running the Application Locally
 
