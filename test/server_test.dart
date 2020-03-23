@@ -11,7 +11,7 @@ Future<void> main() async {
       await harness.agent.get('/'),
       200,
       body: {
-        'running': 'true',
+        'running': true,
       },
     );
   });
